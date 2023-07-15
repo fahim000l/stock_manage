@@ -41,8 +41,10 @@
 
 
       @include('sections.select_supplier_modal')
-      @include('sections.details_drawer')
+      @include('sections.quantityModal')
       @include('sections.add_size_modal')
+
+      @include('sections.details_drawer')
 
       @include('pages.dashboard_pages.add_product_js')
       @include('pages.dashboard_pages.stock_in_js')

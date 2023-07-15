@@ -53,3 +53,7 @@ Route::post('/add-new-size',[DashboardController::class,'addNewSize'])->name('ad
 Route::get('/stock-in/manage-size',[DashboardController::class,'indexManageSize'])->name('manage.size');
 
 Route::post('/stocking-in',[DashboardController::class,'addToStock'])->name('add.stock');
+
+Route::post('/stock-in/show-invoice-products',[DashboardController::class,'indexInvoiceProducts'])->name('show.invoice.products');
+
+Route::post('/stock-in/invoice-quantity',[DashboardController::class,'indexInvoiceQuantity'])->name('show.invoice.quantity');

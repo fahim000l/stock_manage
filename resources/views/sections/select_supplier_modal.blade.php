@@ -23,6 +23,12 @@
                 </label>
                 <input name="trans_id" id="trans_id" type="text" placeholder="Trans Id" class="input input-bordered" />
             </div>
+            <div class="form-control hidden">
+                <label class="label">
+                  <span class="label-text">Status</span>
+                </label>
+                <input value="pending" name="status" id="status" type="text" placeholder="Status" class="input input-bordered" />
+            </div>
         </div>
         <div class="modal-action">
           <!-- if there is a button in form, it will close the modal -->

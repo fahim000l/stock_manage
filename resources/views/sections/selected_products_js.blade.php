@@ -124,7 +124,8 @@
 
                 const stockInfo = {
                     products_info:productsInfo,
-                    quantity_info:quantityInfo
+                    quantity_info:quantityInfo,
+                    invoice_info
                 }
 
                 $.ajax({

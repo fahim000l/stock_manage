@@ -20,17 +20,31 @@
                 <td>{{ $invoice->date }}</td>
                 <td>{{ $invoice->trans_id }}</td>
                 <td>
-                    <span class="badge badge-info badge-lg">pending</span>
+                    @if($invoice->status === 'pending')
+                            <span class="badge badge-info badge-lg">{{ $invoice->status }}</span>
+                        @else
+                            <span class="badge badge-success badge-lg">{{ $invoice->status }}</span>
+                    @endif
                 </td>
                 <td>
-                    <button
-                        id="addProductInvoiceBtn"
-                        data-trans_id="{{ $invoice->trans_id }}"
-                        data-date="{{ $invoice->date }}"
-                        data-supplier_email="{{ $invoice->supplier_email }}"
-                        class="btn btn-info normal-case btn-sm">
-                        Add Procuct
-                    </button>
+                    @if($invoice->status === 'pending')
+                            <button
+                            id="addProductInvoiceBtn"
+                            data-trans_id="{{ $invoice->trans_id }}"
+                            data-date="{{ $invoice->date }}"
+                            data-supplier_email="{{ $invoice->supplier_email }}"
+                            class="btn btn-info normal-case btn-sm">
+                            Add Procuct
+                            </button>
+                        @else
+                            <label
+                            for="detailsDrawer"
+                            id="showProductsInvoiceBtn"
+                            data-trans_id="{{ $invoice->trans_id }}"
+                            class="btn btn-success normal-case btn-sm">
+                            Show Procuct
+                            </label>
+                    @endif
                 </td>
             </tr>
         @endforeach

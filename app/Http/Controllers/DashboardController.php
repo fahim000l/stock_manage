@@ -10,6 +10,7 @@ use App\Models\products_collection;
 use App\Models\invoice_collection;
 use App\Models\product_stock;
 use App\Models\quantity_stock;
+use App\Models\invoices_collection;
 
 class DashboardController extends Controller
 {
@@ -99,7 +100,7 @@ class DashboardController extends Controller
 
     public function indexInvoiceCollection(){
 
-        $invoices = invoice_collection::get();
+        $invoices = invoices_collection::get();
         // echo '<pre>';
         // print_r($invoice_products);
 
@@ -171,7 +172,8 @@ class DashboardController extends Controller
             [
                 'supplier_email_modal'=>'required',
                 'date_modal'=>'required',
-                'trans_id'=>'required|unique:invoice_collections'
+                'trans_id'=>'required|unique:invoice_collections',
+                'status'=>'required'
             ],
             [
                 'supplier_email_modal.required' => 'Supplier Email is required',
@@ -181,11 +183,12 @@ class DashboardController extends Controller
             ]
             );
 
-            $invoice = new invoice_collection();
+            $invoice = new invoices_collection();
 
             $invoice->supplier_email = $request->supplier_email_modal;
             $invoice->date = $request->date_modal;
             $invoice->trans_id = $request->trans_id;
+            $invoice->status = $request->status;
             $invoice->save();
 
             return response()->json([
@@ -245,9 +248,6 @@ class DashboardController extends Controller
     }
 
     public function addToStock(Request $request){
-        // dd($request->all());
-
-
 
         foreach ($request->products_info as $key => $product) {
             if(!product_stock::where('product_code',$product['product_code'])->exists()){
@@ -257,10 +257,32 @@ class DashboardController extends Controller
         }
         // product_stock::insert($request->products_info);
         quantity_stock::insert($request->quantity_info);
+        invoices_collection::where('trans_id',$request->invoice_info['transId'])->update([
+            'status'=>'success'
+        ]);
 
         return response()->json([
             'status'=>'success'
         ]);
     }
+
+    public function indexInvoiceProducts(Request $request){
+        // dd($request->trans_id);
+
+        $invoice_products = product_stock::where('trans_id',$request->trans_id)->get();
+
+        return view('sections.invoice_products',compact('invoice_products'));
+    }
+
+    public function indexInvoiceQuantity(Request $request){
+        $quantities = quantity_stock::where('trans_id',$request->trans_id)->where('product_code',$request->product_code)->get();
+
+        // dd($quantities);
+
+        return view('sections.invoiceQuantityTable',compact('quantities'))->render();
+
+
+    }
+
 
 }
