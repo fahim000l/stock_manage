@@ -57,3 +57,9 @@ Route::post('/stocking-in',[DashboardController::class,'addToStock'])->name('add
 Route::post('/stock-in/show-invoice-products',[DashboardController::class,'indexInvoiceProducts'])->name('show.invoice.products');
 
 Route::post('/stock-in/invoice-quantity',[DashboardController::class,'indexInvoiceQuantity'])->name('show.invoice.quantity');
+
+Route::get('/stock-collection',[DashboardController::class,'indexStockCollection'])->name('stock.colection');
+
+Route::post('/stock-collection/invoice-info',[DashboardController::class,'indexInvoiceInfo'])->name('index.invoice.info');
+
+Route::post('/stock-collection/stock-quantity',[DashboardController::class,'indexStockQuantity'])->name('index.stock.quantity');

@@ -33,7 +33,7 @@
             <!-- Sidebar content here -->
             <li><a href="{{ route('add.product.page') }}">Add Product</a></li>
             <li><a href="{{ route('stock.in.page') }}" >Stock In</a></li>
-            <li><a href="{{ route('stock.in.page') }}" >Manage Sizes</a></li>
+            <li><a href="{{ route('stock.colection') }}" >Stock Collection</a></li>
           </ul>
 
         </div>
@@ -52,6 +52,7 @@
       @include('sections.invoice_collection_js')
       @include('sections.products_collection_js')
       @include('sections.selected_products_js')
+      @include('pages.dashboard_pages.stock_collection_js')
       {!! Toastr::message() !!}
 </body>
 </html>

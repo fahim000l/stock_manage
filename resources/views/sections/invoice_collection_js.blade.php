@@ -31,6 +31,7 @@
                     $('#supplier_collection').removeClass('tab-active')
                     $('#invoice_collection').removeClass('tab-active')
                     $('#products_collection').addClass('tab-active')
+                    localStorage.removeItem('selectedProducts')
                 },
             })
 

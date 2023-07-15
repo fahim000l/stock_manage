@@ -249,13 +249,13 @@ class DashboardController extends Controller
 
     public function addToStock(Request $request){
 
-        foreach ($request->products_info as $key => $product) {
-            if(!product_stock::where('product_code',$product['product_code'])->exists()){
-                product_stock::insert($product);
-            }
+        // foreach ($request->products_info as $key => $product) {
+        //     if(!product_stock::where('product_code',$product['product_code'])->exists()){
+        //         product_stock::insert($product);
+        //     }
 
-        }
-        // product_stock::insert($request->products_info);
+        // }
+        product_stock::insert($request->products_info);
         quantity_stock::insert($request->quantity_info);
         invoices_collection::where('trans_id',$request->invoice_info['transId'])->update([
             'status'=>'success'
@@ -280,9 +280,29 @@ class DashboardController extends Controller
         // dd($quantities);
 
         return view('sections.invoiceQuantityTable',compact('quantities'))->render();
-
-
     }
+
+    public function indexStockCollection(){
+        $stock_products = product_stock::get();
+
+        return view('pages.dashboard_pages.stock_collection',compact('stock_products'));
+    }
+
+    public function indexInvoiceInfo(Request $request){
+        $invoice_info = invoices_collection::where('trans_id',$request->trans_id)->first();
+
+        return view('sections.stock_invoice_table',compact('invoice_info'));
+    }
+
+
+    public function indexStockQuantity(Request $request){
+
+        $quantities = quantity_stock::where('trans_id',$request->trans_id)->where('product_code',$request->product_code)->get();
+
+        return view('sections.stock_quantity_table',compact('quantities'));
+    }
+
+
 
 
 }
