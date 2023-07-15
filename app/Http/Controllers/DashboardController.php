@@ -304,5 +304,35 @@ class DashboardController extends Controller
 
 
 
+    public function indexManageSizeTable()
+    {
+
+        $allSizes = size_collection::get();
+
+        return view('sections.manageSizeTable',compact('allSizes'));
+    }
+
+
+    public function setStatusActive(Request $request){
+        size_collection::where('size_id',$request->size_id)->update([
+                'status'=>'active'
+            ]);
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
+    }
+    public function setStatusDeactive(Request $request){
+        size_collection::where('size_id',$request->size_id)->update([
+                'status'=>'deactive'
+            ]);
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
+    }
+
 
 }

@@ -43,6 +43,7 @@
       @include('sections.select_supplier_modal')
       @include('sections.quantityModal')
       @include('sections.add_size_modal')
+      @include('sections.manage_size_modal')
 
       @include('sections.details_drawer')
 
@@ -53,6 +54,7 @@
       @include('sections.products_collection_js')
       @include('sections.selected_products_js')
       @include('pages.dashboard_pages.stock_collection_js')
+      @include('sections.details_drawer_js')
       {!! Toastr::message() !!}
 </body>
 </html>
