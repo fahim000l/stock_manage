@@ -5,6 +5,7 @@
         <tr>
           <th>Size</th>
           <th>Quantity</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +20,14 @@
 
             <tr>
                 <td>{{ $size->size_name }}</td>
-                <td>{{ $quantitie->quantity }}</td>
+                <td>{{ $quantitie->quantity }}</td>invoiceEditBtn
+                <td>
+                    <button data-product_code="{{ $quantitie->product_code }}"
+                        data-trans_id="{{ $quantitie->trans_id }}"
+                        data-size_id="{{ $quantitie->size_id }}" id="" class="btn btn-info btn-circle btn-xs">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                </td>
             </tr>
         @endforeach
 

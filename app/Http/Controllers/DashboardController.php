@@ -32,8 +32,9 @@ class DashboardController extends Controller
 
         // $suppliers = suppliers_collection::latest()->paginate(5);
         $suppliers = suppliers_collection::get();
+        $products = products_collection::get();
 
-        return view('pages.dashboard_pages.stock_in',compact('suppliers'));
+        return view('pages.dashboard_pages.stock_in',compact('suppliers','products'));
     }
 
     public function uploadImage(Request $request){
@@ -98,46 +99,6 @@ class DashboardController extends Controller
         return view('sections.supplier_collection',compact('suppliers'));
     }
 
-    public function indexInvoiceCollection(){
-
-        $invoices = invoices_collection::get();
-        // echo '<pre>';
-        // print_r($invoice_products);
-
-        return view('sections.invoice_collection',compact('invoices'));
-    }
-
-    public function indexProductsCollection(){
-        $products = products_collection::get();
-
-
-        $invoiceInfo = [
-            '',
-            '',
-            ''
-        ];
-
-
-        return view('sections.products_collection',compact('products','invoiceInfo'));
-    }
-
-    public function indexSelectedProducts(){
-
-
-        return view('sections.selected_products');
-    }
-
-    public function indexSelectedProductInfo(Request $request){
-
-        // echo '<pre>';
-        // print_r($request->all());
-
-        $selected_products = $request->all();
-
-        return view('sections.selected_products',compact('selected_products'));
-
-    }
-
     public function addSupplier(Request $request){
 
         $request->validate(
@@ -153,8 +114,7 @@ class DashboardController extends Controller
 
             ]
             );
-            // echo '<pre>';
-            // print_r($request->supplier_email);
+
 
             $supplier = new suppliers_collection();
 
@@ -167,47 +127,78 @@ class DashboardController extends Controller
             ]);
     }
 
-    public function addInvoice(Request $request){
-        $request->validate(
-            [
-                'supplier_email_modal'=>'required',
-                'date_modal'=>'required',
-                'trans_id'=>'required|unique:invoice_collections',
-                'status'=>'required'
-            ],
-            [
-                'supplier_email_modal.required' => 'Supplier Email is required',
-                'date_modal.required' => 'Date is required',
-                'trans_id.required'=>'Trans Id is required',
-                'trans_id.unique' => 'This transsection already happened'
-            ]
-            );
+    public function indexInvoice(){
 
-            $invoice = new invoices_collection();
 
-            $invoice->supplier_email = $request->supplier_email_modal;
-            $invoice->date = $request->date_modal;
-            $invoice->trans_id = $request->trans_id;
-            $invoice->status = $request->status;
-            $invoice->save();
+        $suppliers = suppliers_collection::get();
+        $products = products_collection::get();
 
-            return response()->json([
-                'status'=>'success'
-            ]);
+
+        return view('sections.invoice',compact('suppliers','products'));
+    }
+
+    public function getSupplier(Request $request){
+        $selected_supplier = suppliers_collection::where('supplier_email',$request->supplier_email)->get();
+
+        return response()->json($selected_supplier);
 
     }
 
-    public function indexInfoiceInfo(Request $request){
+    public function getProduct(Request $request){
+        $selected_product = products_collection::where('product_code',$request->product_code)->get();
 
-        $invoiceInfo = [
-            $request->supplierEmail,
-            $request->transId,
-            $request->date
-        ];
+        return response()->json($selected_product);
+    }
+
+    public function indexSetQuantityTable(Request $request){
+        $product = products_collection::where('product_code',$request->product_code)->get();
+        $sizes = size_collection::where('status','active')->get();
+
+
+
+        return view('sections.set_quantity_table',compact('product','sizes'));
+    }
+
+    public function stockingIn(Request $request){
+        // echo '<pre>';
+        // print_r($request->all());
+
+        product_stock::insert($request->productInfo);
+        quantity_stock::insert($request->quantityInfo);
+        $invoice = new invoices_collection();
+        $invoice->supplier_email = $request->invoiceInfo['supplier_email'];
+        $invoice->date = $request->invoiceInfo['date'];
+        $invoice->trans_id = $request->invoiceInfo['trans_id'];
+        $invoice->status = $request->invoiceInfo['status'];
+        $invoice->save();
+
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+    }
+
+    public function indexStockCollection(){
 
         $products = products_collection::get();
 
-        return view('sections.products_collection',compact('invoiceInfo','products'));
+        return view('pages.dashboard_pages.stock_collection',compact('products'));
+
+    }
+
+
+    public function indexInvoiceDetails(Request $request){
+
+        $invoices = product_stock::where('product_code',$request->product_code)->get();
+
+        return view('sections.product_invoices',compact('invoices'));
+
+    }
+
+    public function indexInvoiceQuantity(Request $request){
+        $quantities = quantity_stock::where('product_code',$request->product_code)->where('trans_id',$request->trans_id)->get();
+
+        return view('sections.invoice_quantity_table',compact('quantities'));
     }
 
     public function addNewSize(Request $request){
@@ -238,72 +229,6 @@ class DashboardController extends Controller
 
     }
 
-    public function indexManageSize(){
-
-        $sizes = size_collection::where('status','active')->get();
-
-        return view('sections.manage_size',compact('sizes'));
-
-
-    }
-
-    public function addToStock(Request $request){
-
-        // foreach ($request->products_info as $key => $product) {
-        //     if(!product_stock::where('product_code',$product['product_code'])->exists()){
-        //         product_stock::insert($product);
-        //     }
-
-        // }
-        product_stock::insert($request->products_info);
-        quantity_stock::insert($request->quantity_info);
-        invoices_collection::where('trans_id',$request->invoice_info['transId'])->update([
-            'status'=>'success'
-        ]);
-
-        return response()->json([
-            'status'=>'success'
-        ]);
-    }
-
-    public function indexInvoiceProducts(Request $request){
-        // dd($request->trans_id);
-
-        $invoice_products = product_stock::where('trans_id',$request->trans_id)->get();
-
-        return view('sections.invoice_products',compact('invoice_products'));
-    }
-
-    public function indexInvoiceQuantity(Request $request){
-        $quantities = quantity_stock::where('trans_id',$request->trans_id)->where('product_code',$request->product_code)->get();
-
-        // dd($quantities);
-
-        return view('sections.invoiceQuantityTable',compact('quantities'))->render();
-    }
-
-    public function indexStockCollection(){
-        $stock_products = product_stock::get();
-
-        return view('pages.dashboard_pages.stock_collection',compact('stock_products'));
-    }
-
-    public function indexInvoiceInfo(Request $request){
-        $invoice_info = invoices_collection::where('trans_id',$request->trans_id)->first();
-
-        return view('sections.stock_invoice_table',compact('invoice_info'));
-    }
-
-
-    public function indexStockQuantity(Request $request){
-
-        $quantities = quantity_stock::where('trans_id',$request->trans_id)->where('product_code',$request->product_code)->get();
-
-        return view('sections.stock_quantity_table',compact('quantities'));
-    }
-
-
-
     public function indexManageSizeTable()
     {
 
@@ -311,7 +236,6 @@ class DashboardController extends Controller
 
         return view('sections.manageSizeTable',compact('allSizes'));
     }
-
 
     public function setStatusActive(Request $request){
         size_collection::where('size_id',$request->size_id)->update([
@@ -333,6 +257,21 @@ class DashboardController extends Controller
         ]);
 
     }
+
+
+    public function deleteStock(Request $request){
+        $product_stock = product_stock::where('trans_id',$request->trans_id)->get();
+        $quantity_stock = quantity_stock::where('trans_id',$request->trans_id)->get();
+
+        $product_stock->each->delete();
+        $quantity_stock->each->delete();
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+    }
+
+
 
 
 }

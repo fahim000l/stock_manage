@@ -13,6 +13,9 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     <script src="https://kit.fontawesome.com/6f0249e16e.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/app.css'])
     {{-- @vite('resources/css/app.css') --}}
@@ -33,26 +36,27 @@
             <!-- Sidebar content here -->
             <li><a href="{{ route('add.product.page') }}">Add Product</a></li>
             <li><a href="{{ route('stock.in.page') }}" >Stock In</a></li>
-            <li><a href="{{ route('stock.colection') }}" >Stock Collection</a></li>
+            <li><a id="stock_collection_route" href="{{ route('stock.collection.page') }}" >Stock Collection</a></li>
           </ul>
 
         </div>
       </div>
 
 
-      @include('sections.select_supplier_modal')
-      @include('sections.quantityModal')
+
+      @include('sections.add_supplier_modal')
+      @include('sections.details_modal')
       @include('sections.add_size_modal')
-      @include('sections.manage_size_modal')
 
       @include('sections.details_drawer')
+
+
+
 
       @include('pages.dashboard_pages.add_product_js')
       @include('pages.dashboard_pages.stock_in_js')
       @include('sections.supplier_collection_js')
-      @include('sections.invoice_collection_js')
-      @include('sections.products_collection_js')
-      @include('sections.selected_products_js')
+      @include('sections.invoice_js')
       @include('pages.dashboard_pages.stock_collection_js')
       @include('sections.details_drawer_js')
       {!! Toastr::message() !!}

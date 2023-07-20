@@ -9,7 +9,7 @@
           <li><a>Products</a></li>
         </ul>
       </div>
-      <a href="{{ route('home.page') }}" class="btn btn-ghost normal-case text-xl">daisyUI</a>
+      <a href="{{ route('home.page') }}" class="btn btn-ghost normal-case text-xl">Cursor</a>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">

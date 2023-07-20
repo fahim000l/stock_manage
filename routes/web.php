@@ -34,38 +34,30 @@ Route::post('/add-product',[DashboardController::class,'addNewProduct'])->name('
 
 Route::get('/stock-in/supplier-collection',[DashboardController::class,'indexSupplierCollection'])->name('supplier.collection');
 
-Route::get('/stock-in/invoice-sollection',[DashboardController::class,'indexInvoiceCollection'])->name('invoice.collection');
-
-Route::get('/stock-in/products-collection',[DashboardController::class,'indexProductsCollection'])->name('products.collection');
-
 Route::post('/stock-in/add-supplier',[DashboardController::class,'addSupplier'])->name('add.supplier');
 
-Route::post('/stock-in/add-invoice',[DashboardController::class,'addInvoice'])->name('add.invoice');
+Route::get('/stock-in/invoice',[DashboardController::class,'indexInvoice'])->name('index.invoice');
 
-Route::post('/stock-in/show-invoice-info',[DashboardController::class,'indexInfoiceInfo'])->name('invoice.info');
+Route::post('/stock-in/get-supplier',[DashboardController::class,'getSupplier'])->name('get.supplier');
 
-Route::get('/stock-in/selected-products',[DashboardController::class,'indexSelectedProducts'])->name('selected.products');
+Route::post('/stock-in/get-product',[DashboardController::class,'getProduct'])->name('get.product');
 
-Route::post('/stock-in/selected-products-info',[DashboardController::class,'indexSelectedProductInfo'])->name('selected.products.info');
+Route::post('/stock-in/index-set-quantity-table',[DashboardController::class,'indexSetQuantityTable'])->name('index.setquantity.table');
+
+Route::post('/stock-in/stocking-in',[DashboardController::class,'stockingIn'])->name('stocking.in');
+
+Route::get('/stock-collection',[DashboardController::class,'indexStockCollection'])->name('stock.collection.page');
+
+Route::post('/stock-collection/index-invoice-details',[DashboardController::class,'indexInvoiceDetails'])->name('index.invoice.details');
+
+Route::post('/stock-collection/show-invoice-quantity',[DashboardController::class,'indexInvoiceQuantity'])->name('index.invoice,quantity');
 
 Route::post('/add-new-size',[DashboardController::class,'addNewSize'])->name('add.size');
-
-Route::get('/stock-in/manage-size',[DashboardController::class,'indexManageSize'])->name('manage.size');
-
-Route::post('/stocking-in',[DashboardController::class,'addToStock'])->name('add.stock');
-
-Route::post('/stock-in/show-invoice-products',[DashboardController::class,'indexInvoiceProducts'])->name('show.invoice.products');
-
-Route::post('/stock-in/invoice-quantity',[DashboardController::class,'indexInvoiceQuantity'])->name('show.invoice.quantity');
-
-Route::get('/stock-collection',[DashboardController::class,'indexStockCollection'])->name('stock.colection');
-
-Route::post('/stock-collection/invoice-info',[DashboardController::class,'indexInvoiceInfo'])->name('index.invoice.info');
-
-Route::post('/stock-collection/stock-quantity',[DashboardController::class,'indexStockQuantity'])->name('index.stock.quantity');
 
 Route::get('/index-manage-size',[DashboardController::class,'indexManageSizeTable'])->name('index.all.size');
 
 Route::post('/set-status-deactive',[DashboardController::class,'setStatusDeactive'])->name('set.status.deactive');
 
 Route::post('/set-status-active',[DashboardController::class,'setStatusActive'])->name('set.status.active');
+
+Route::post('/stock-collection/delete-stock',[DashboardController::class,'deleteStock'])->name('delete.stock');

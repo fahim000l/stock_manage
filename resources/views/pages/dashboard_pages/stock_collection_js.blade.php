@@ -1,38 +1,67 @@
 <script>
     $(document).ready(function(){
-        $(document).on('click','#stockInvoiceDetailsBtn',function(){
-            const transId = $(this).data('trans_id')
-            console.log(transId)
+        $(document).on('click','#scInvoiceDetailsBtn',function(){
+            const productCode = $(this).data('product_code');
 
             $.ajax({
-                url:'{{ route('index.invoice.info') }}',
+                url:'{{ route('index.invoice.details') }}',
                 method:'POST',
-                data:{trans_id:transId},
+                data:{product_code:productCode},
                 success:function(res){
-                    $('#detailDrawerContent').html(res)
+                    $('#detailsDrawerContent').html(res)
+                },
+                error:function(err){
+                    console.log(err)
                 }
             })
-
-
         })
 
-        $(document).on('click','#stockQuantityBtn',function(){
+        $(document).on('click','#invoiceDetailsQuantityBtn',function(){
             const transId = $(this).data('trans_id');
             const productCode = $(this).data('product_code');
 
-            console.log({transId,productCode});
-
             $.ajax({
-                url:'{{ route('index.stock.quantity') }}',
+                url:'{{ route('index.invoice,quantity') }}',
                 method:'POST',
                 data:{trans_id:transId,product_code:productCode},
                 success:function(res){
-                    $('#detailDrawerContent').html(res)
+                    $('#detailsModalContent').html(res);
+                },
+                error:function(err){
+                    console.log(err);
                 }
             })
+        })
+
+        $(document).on('click','#delete_stock',function(){
+            const transId = $(this).data('trans_id');
+
+            $.ajax({
+                url:'{{ route('delete.stock') }}',
+                method:'POST',
+                data:{trans_id:transId},
+                success:function(res){
+                    if(res.status === 'success'){
+                        $('#detailsDrawer').click();
+                    }
+                },
+                error:function(err){
+                    console.log(err)
+                }
+            })
+        })
+
+        $(document).on('click','#invoiceEditBtn',function(){
+            const productCode = $(this).data('product_code');
+            const transId = $(this).data('trans_id');
+            const sizeId = $(this).data('size_id');
+
+            console.log({productCode,transId,sizeId});
 
 
         })
+
+
 
 
     })
