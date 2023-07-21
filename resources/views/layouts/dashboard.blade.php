@@ -47,6 +47,8 @@
       @include('sections.add_supplier_modal')
       @include('sections.details_modal')
       @include('sections.add_size_modal')
+      @include('sections.invoiceDeleteConfirmModal')
+      @include('sections.invoice_product_delete_confirm_modal')
 
       @include('sections.details_drawer')
 
@@ -59,6 +61,8 @@
       @include('sections.invoice_js')
       @include('pages.dashboard_pages.stock_collection_js')
       @include('sections.details_drawer_js')
+      @include('sections.product_stock_js')
+      @include('sections.invoice_stock_js')
       {!! Toastr::message() !!}
 </body>
 </html>

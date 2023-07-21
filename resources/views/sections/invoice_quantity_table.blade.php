@@ -20,7 +20,7 @@
 
             <tr>
                 <td>{{ $size->size_name }}</td>
-                <td>{{ $quantitie->quantity }}</td>invoiceEditBtn
+                <td>{{ $quantitie->quantity }}</td>
                 <td>
                     <button data-product_code="{{ $quantitie->product_code }}"
                         data-trans_id="{{ $quantitie->trans_id }}"

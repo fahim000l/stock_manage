@@ -13,6 +13,7 @@
                 <label for="addSizeModal" class="btn btn-neutral btn-sm normal-case">Add new Size</label>
                 <label id="sizeListBtn" for="detailsModal" class="btn btn-info btn-sm normal-case">Manage Sizes</label>
             </div>
+            <p id="lastClicked"></p>
             <div id="detailsDrawerContent">
 
             </div>

@@ -160,8 +160,6 @@ class DashboardController extends Controller
     }
 
     public function stockingIn(Request $request){
-        // echo '<pre>';
-        // print_r($request->all());
 
         product_stock::insert($request->productInfo);
         quantity_stock::insert($request->quantityInfo);
@@ -259,9 +257,11 @@ class DashboardController extends Controller
     }
 
 
-    public function deleteStock(Request $request){
+    public function invoiceDelete(Request $request){
         $product_stock = product_stock::where('trans_id',$request->trans_id)->get();
         $quantity_stock = quantity_stock::where('trans_id',$request->trans_id)->get();
+
+        invoices_collection::where('trans_id',$request->trans_id)->delete();
 
         $product_stock->each->delete();
         $quantity_stock->each->delete();
@@ -269,6 +269,119 @@ class DashboardController extends Controller
         return response()->json([
             'status'=>'success'
         ]);
+    }
+
+
+    public function indexProductStockQuantity(Request $request){
+
+        $selected_product = $request->product_code;
+
+        return view('sections.product_stock_quantuty_table',compact('selected_product'));
+    }
+
+    public function indexProductStock(){
+
+        $products = products_collection::get();
+
+
+        return view('sections.product_stock',compact('products'));
+    }
+
+    public function indexInvoiceStock(){
+
+        $invoices = invoices_collection::get();
+
+
+        return view('sections.invoice_stock',compact('invoices'));
+    }
+
+    public function indexInvoiceProducts(Request $request){
+        $invoice_products = product_stock::where('trans_id',$request->trans_id)->get();
+
+        return view('sections.invoice_products_table',compact('invoice_products'));
+    }
+
+
+
+    public function indexInvoiceProductQuantity(Request $request){
+
+        $selectedProduct = $request->product_code;
+        $selected_invoice = $request->trans_id;
+
+        return view('sections.invoice_product_quantity_table',compact('selectedProduct','selected_invoice'));
+
+
+    }
+
+    public function editInvoiceInfo(Request $request){
+        invoices_collection::where('trans_id',$request->trans_id)->update([
+            'supplier_email'=>$request->supplier_email,
+            'date'=>$request->date,
+        ]);
+
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
+
+    }
+
+    public function deleteInvoiceProducts(Request $request){
+
+        $selected_products = $request->selectedProducts;
+
+        foreach ($selected_products as $key => $selected_product) {
+
+
+            product_stock::where('trans_id',$selected_product['trans_id'])->where('product_code',$selected_product['product_code'])->delete();
+
+            quantity_stock::where('trans_id',$selected_product['trans_id'])->where('product_code',$selected_product['product_code'])->delete();
+
+        }
+
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
+
+    }
+
+
+    public function invoiceProductEdit(Request $request){
+
+
+        // echo '<pre>';
+        // print_r($request->all());
+
+
+        product_stock::where('product_code',$request->product_code)->where('trans_id',$request->trans_id)->update([
+            'product_code'=>$request->selected_product_code,
+            'buy_price'=>$request->buy_price,
+            'sell_price'=>$request->sell_price
+        ]);
+
+        quantity_stock::where('product_code',$request->product_code)->where('trans_id',$request->trans_id)->update([
+            'product_code'=>$request->selected_product_code
+        ]);
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
+    }
+
+
+    public function invoiceProductQuantityEdit(Request $request){
+        quantity_stock::where('trans_id',$request->trans_id)->where('product_code',$request->product_code)->where('size_id',$request->size_id)->update([
+            'quantity'=>$request->quantity
+        ]);
+
+        return response()->json([
+            'status'=>'success'
+        ]);
+
     }
 
 

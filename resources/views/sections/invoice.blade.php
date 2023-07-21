@@ -100,10 +100,10 @@
                             </div>
                         </td>
                         <td>
-                            <input disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs buy_price_{{ $key+1 }}">
+                            <input id="buy_price" disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs buy_price_{{ $key+1 }}">
                         </td>
                         <td>
-                            <input disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs sell_price_{{ $key+1 }}">
+                            <input id="sell_price" disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs sell_price_{{ $key+1 }}">
                         </td>
                         <th class="flex flex-col items-center">
                             <span class="badge badge-neutral quantity_{{ $key+1 }}">0</span>
@@ -174,3 +174,19 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $('#date').val(`${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}`)
+
+    console.log($('.addProductTable')[0])
+    $('#supplierSelect').select2({
+        placeholder:'Select supplier',
+        allowClear:true
+    })
+
+    $('.selectProducts').select2({
+        placeholder:'Select Product',
+        allowClear:true,
+    })
+</script>

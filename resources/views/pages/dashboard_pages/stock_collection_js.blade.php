@@ -1,66 +1,28 @@
 <script>
     $(document).ready(function(){
-        $(document).on('click','#scInvoiceDetailsBtn',function(){
-            const productCode = $(this).data('product_code');
-
+        $(document).on('click','#product_stock_tab',function(){
             $.ajax({
-                url:'{{ route('index.invoice.details') }}',
-                method:'POST',
-                data:{product_code:productCode},
+                url:'{{ route('index.product.stock') }}',
+                method:'GET',
                 success:function(res){
-                    $('#detailsDrawerContent').html(res)
-                },
-                error:function(err){
-                    console.log(err)
+                    $('#stock_tab_items_container').html(res);
+                    $('#product_stock_tab').addClass('tab-active');
+                    $('#invoice_stock_tab').removeClass('tab-active');
                 }
             })
         })
 
-        $(document).on('click','#invoiceDetailsQuantityBtn',function(){
-            const transId = $(this).data('trans_id');
-            const productCode = $(this).data('product_code');
-
+        $(document).on('click','#invoice_stock_tab',function(){
             $.ajax({
-                url:'{{ route('index.invoice,quantity') }}',
-                method:'POST',
-                data:{trans_id:transId,product_code:productCode},
+                url:'{{ route('index.invoice.stock') }}',
+                method:'GET',
                 success:function(res){
-                    $('#detailsModalContent').html(res);
-                },
-                error:function(err){
-                    console.log(err);
+                    $('#stock_tab_items_container').html(res);
+                    $('#product_stock_tab').removeClass('tab-active');
+                    $('#invoice_stock_tab').addClass('tab-active');
                 }
             })
         })
-
-        $(document).on('click','#delete_stock',function(){
-            const transId = $(this).data('trans_id');
-
-            $.ajax({
-                url:'{{ route('delete.stock') }}',
-                method:'POST',
-                data:{trans_id:transId},
-                success:function(res){
-                    if(res.status === 'success'){
-                        $('#detailsDrawer').click();
-                    }
-                },
-                error:function(err){
-                    console.log(err)
-                }
-            })
-        })
-
-        $(document).on('click','#invoiceEditBtn',function(){
-            const productCode = $(this).data('product_code');
-            const transId = $(this).data('trans_id');
-            const sizeId = $(this).data('size_id');
-
-            console.log({productCode,transId,sizeId});
-
-
-        })
-
 
 
 

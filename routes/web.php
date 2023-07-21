@@ -60,4 +60,22 @@ Route::post('/set-status-deactive',[DashboardController::class,'setStatusDeactiv
 
 Route::post('/set-status-active',[DashboardController::class,'setStatusActive'])->name('set.status.active');
 
-Route::post('/stock-collection/delete-stock',[DashboardController::class,'deleteStock'])->name('delete.stock');
+Route::post('/stock-collection/invoice-delete',[DashboardController::class,'invoiceDelete'])->name('invoice.delete');
+
+Route::post('/stock-collection/index-productStock-quantity',[DashboardController::class,'indexProductStockQuantity'])->name('index.product.stock.quantity');
+
+Route::get('/stock-collection/index-product-stock',[DashboardController::class,'indexProductStock'])->name('index.product.stock');
+
+Route::get('/stock-collection/index-invoice-stock',[DashboardController::class,'indexInvoiceStock'])->name('index.invoice.stock');
+
+Route::post('/stock-collection/index-invoice-products',[DashboardController::class,'indexInvoiceProducts'])->name('index.invoice.products');
+
+Route::post('/stock-collection/index-invoice-product-quantity',[DashboardController::class,'indexInvoiceProductQuantity'])->name('index.invoice.product.quantity');
+
+Route::post('/stock-collection/edit-invoice-info',[DashboardController::class,'editInvoiceInfo'])->name('edit.invoice.info');
+
+Route::post('/stock-colection/delete-invoice-products',[DashboardController::class,'deleteInvoiceProducts'])->name('delete.invoice.products');
+
+Route::post('/stock-collection/invoice-product-edit',[DashboardController::class,'invoiceProductEdit'])->name('invoice.product.edit');
+
+Route::post('/stock-collection/invoice-product-quantity-edit',[DashboardController::class,'invoiceProductQuantityEdit'])->name('invoice.product.quantity.edit');

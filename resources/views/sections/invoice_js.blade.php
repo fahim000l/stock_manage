@@ -82,7 +82,7 @@
                     $(`.sell_price_${selectedKey}`).val(selectedProduct?.sell_price)
                     if(!selectedkeys.includes(selectedKey)){
                         selectedkeys.push(selectedKey)
-                        selectedProducts.push({product_code:selectedProduct?.product_code,trans_id:$('#transId_summary').text()})
+                        selectedProducts.push({product_code:selectedProduct?.product_code,trans_id:$('#transId_summary').text(),buy_price:$(`.buy_price_${selectedKey}`).val(),sell_price:$(`.sell_price_${selectedKey}`).val()})
                         $(`.${selectedProduct?.product_code}`).attr('disabled',true)
 
                         console.log(selectedProducts)
@@ -102,9 +102,47 @@
                 }
             })
 
+        })
+
+
+        $(document).on('change','#buy_price',function(){
+            const selectedField = $(this).attr('class').split(' ')[5]
+            const selectedKey = selectedField.split('_')[2]
+
+            const productCode = $(`.hidden_pc_${selectedKey}`).val()
+            changingProduct = selectedProducts?.find(product=> product?.product_code === productCode);
+
+            selectedProducts = selectedProducts?.filter(product=>product?.product_code !== productCode);
+
+            changingProduct['buy_price'] = $(`.buy_price_${selectedKey}`).val()
+
+            selectedProducts.push(changingProduct);
 
 
         })
+
+
+        $(document).on('change','#sell_price',function(){
+            const selectedField = $(this).attr('class').split(' ')[5]
+            console.log(selectedField)
+            const selectedKey = selectedField.split('_')[2]
+            console.log(selectedKey)
+
+            const productCode = $(`.hidden_pc_${selectedKey}`).val()
+            const changingProduct = selectedProducts?.find(product => product?.product_code === productCode);
+
+            selectedProducts = selectedProducts?.filter(product => product?.product_code !== productCode);
+
+            changingProduct['sell_price'] = $(`.sell_price_${selectedKey}`).val()
+
+            selectedProducts.push(changingProduct)
+
+
+        })
+
+
+
+
 
         $(document).on('select2:unselect','.selectProducts',function(){
             const unselectedField = $(this).attr('class').split(' ')[1]
@@ -232,11 +270,11 @@
             }
 
             selectedProducts?.forEach(product => {
-                if(Object.keys(product).length > 2){
+                if(Object.keys(product).length > 4){
 
-                    productInfo.push({product_code:product?.product_code,trans_id:product?.trans_id});
+                    productInfo.push({product_code:product?.product_code,trans_id:product?.trans_id,buy_price:product?.buy_price,sell_price:product?.sell_price});
                     Object.keys(product).forEach(key => {
-                        if(key !== 'product_code' && key !== 'trans_id'){
+                        if(key !== 'product_code' && key !== 'trans_id' && key !== 'buy_price' && key !== 'sell_price'){
                             quantityInfo.push({trans_id:product.trans_id,product_code:product.product_code,size_id:key,quantity:product[`${key}`]})
                             status = true
                         }
