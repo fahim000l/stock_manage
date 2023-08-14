@@ -26,28 +26,16 @@
 
 
         @foreach ($invoice_products as $key=>$invoice_product)
-
-
             @php
-                $product_info = App\Models\products_collection::where('product_code',$invoice_product->product_code)->first();
-
-                $invoice_product_quantities = App\Models\quantity_stock::where('product_code',$invoice_product->product_code)->where('trans_id',$invoice_product->trans_id)->get();
-
-
                 $profit = $invoice_product->sell_price - $invoice_product->buy_price;
 
                 $total_quantity = 0;
 
-                foreach ($invoice_product_quantities as $innerKey => $invoice_product_quantitie) {
+                foreach ($invoice_product->product_quantity as $innerKey => $invoice_product_quantitie) {
                    $total_quantity = $total_quantity + $invoice_product_quantitie->quantity;
                 }
 
-                $products = App\Models\products_collection::get();
-
-
             @endphp
-
-
             <tr>
                 <th>
                     <label>
@@ -65,7 +53,7 @@
                     <div class="flex items-center space-x-3">
                         <div class="avatar">
                             <div class="mask mask-squircle w-12 h-12">
-                                <img id="invoiceProductImg" src="{{ asset('storage/uploads/'.$product_info->product_img) }}" alt="Avatar Tailwind CSS Component" class="invoice_product_img_{{ $key+1 }}" />
+                                <img id="invoiceProductImg" src="{{ asset('storage/uploads/'.$invoice_product->products_info->product_img) }}" alt="Avatar Tailwind CSS Component" class="invoice_product_img_{{ $key+1 }}" />
                             </div>
                         </div>
                         <div>
@@ -78,7 +66,7 @@
                                     <option
                                     selected
                                     value="{{ $invoice_product->product_code }}">
-                                        {{ $product_info->product_name }}
+                                        {{ $invoice_product->products_info->product_name }}
                                     </option>
                                     @foreach ($products as $productsKey=>$product)
                                         <option value="{{ $product->product_code }}">

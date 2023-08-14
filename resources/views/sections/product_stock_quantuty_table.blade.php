@@ -1,5 +1,5 @@
 @php
-    $sizes = App\Models\size_collection::get();
+    // $sizes = App\Models\size_collection::get();
     $total_quantity = 0;
 @endphp
 
@@ -19,9 +19,9 @@
 
                 $total_size_quantity = 0;
 
-                $stock_quantities = App\Models\quantity_stock::where('product_code',$selected_product)->where('size_id',$size->size_id)->get();
+                // $stock_quantities = App\Models\quantity_stock::where('product_code',$selected_product)->where('size_id',$size->size_id)->get();
 
-                foreach ($stock_quantities as $key => $stock_quantitie) {
+                foreach ($size->size_quantity as $key => $stock_quantitie) {
                     $total_size_quantity = $total_size_quantity + $stock_quantitie->quantity;
 
                 }

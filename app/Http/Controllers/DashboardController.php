@@ -178,9 +178,16 @@ class DashboardController extends Controller
 
     public function indexStockCollection(){
 
-        $products = products_collection::get();
+        // $products = products_collection::get();
+        try {
+            $stock_products = products_collection::with('stock_product_info')->with('stock_quantity_info')->get();
 
-        return view('pages.dashboard_pages.stock_collection',compact('products'));
+        } catch (\Exception $e) {
+            // Log or display the error
+            dd($e->getMessage());
+        }
+        // dd($stock_products);
+        return view('pages.dashboard_pages.stock_collection',compact('stock_products'));
 
     }
 
@@ -274,41 +281,83 @@ class DashboardController extends Controller
 
     public function indexProductStockQuantity(Request $request){
 
+        try{
+
+            $sizes = size_collection::with(['size_quantity' => function($query) use($request){
+                $query->where('product_code','=',$request->product_code);
+            }])->get();
+
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }
         $selected_product = $request->product_code;
 
-        return view('sections.product_stock_quantuty_table',compact('selected_product'));
+        return view('sections.product_stock_quantuty_table',compact('sizes'));
     }
 
     public function indexProductStock(){
+        try {
+            $stock_products = products_collection::with('stock_product_info')->with('stock_quantity_info')->get();
 
-        $products = products_collection::get();
-
-
-        return view('sections.product_stock',compact('products'));
+        } catch (\Exception $e) {
+            // Log or display the error
+            dd($e->getMessage());
+        }
+        // dd($stock_products);
+        return view('sections.product_stock',compact('stock_products'));
     }
 
     public function indexInvoiceStock(){
 
-        $invoices = invoices_collection::get();
 
+        try{
 
-        return view('sections.invoice_stock',compact('invoices'));
+            $invoices = invoices_collection::with('invoice_products')->with('invoice_quantity')->get();
+
+            $suppliers = suppliers_collection::all();
+
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }
+
+        // dd($invoices);
+
+        return view('sections.invoice_stock',compact('invoices','suppliers'));
     }
 
     public function indexInvoiceProducts(Request $request){
-        $invoice_products = product_stock::where('trans_id',$request->trans_id)->get();
 
-        return view('sections.invoice_products_table',compact('invoice_products'));
+
+        try{
+
+            $invoice_products = product_stock::with('products_info')->with('product_quantity')->where('trans_id',$request->trans_id)->get();
+
+            $products = products_collection::all();
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }
+
+
+
+        return view('sections.invoice_products_table',compact('invoice_products','products'));
     }
 
 
 
     public function indexInvoiceProductQuantity(Request $request){
+        try{
 
-        $selectedProduct = $request->product_code;
-        $selected_invoice = $request->trans_id;
+            $sizes = size_collection::with(['size_quantity' =>function($query) use($request){
+                $query->where('product_code','=',$request->product_code);
+            }])->get();
 
-        return view('sections.invoice_product_quantity_table',compact('selectedProduct','selected_invoice'));
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }
+        // $selectedProduct = $request->product_code;
+        // $selected_invoice = $request->trans_id;
+
+        return view('sections.invoice_product_quantity_table',compact('sizes'));
 
 
     }
@@ -352,8 +401,6 @@ class DashboardController extends Controller
     public function invoiceProductEdit(Request $request){
 
 
-        // echo '<pre>';
-        // print_r($request->all());
 
 
         product_stock::where('product_code',$request->product_code)->where('trans_id',$request->trans_id)->update([

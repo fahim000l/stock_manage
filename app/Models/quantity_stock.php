@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class quantity_stock extends Model
 {
     use HasFactory;
+
 }

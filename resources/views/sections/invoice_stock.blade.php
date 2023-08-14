@@ -10,6 +10,7 @@
           <th>Sell Price</th>
           <th>Profit</th>
           <th>Total Products</th>
+          <th>Total quantity</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -20,20 +21,28 @@
         @foreach ($invoices as $key=>$invoice)
 
             @php
-                $invoice_products = App\Models\product_stock::where('trans_id',$invoice->trans_id)->get();
+                // $invoice_products = App\Models\product_stock::where('trans_id',$invoice->trans_id)->get();
 
-                $suppliers = App\Models\suppliers_collection::get();
+                // $invoice_quantity = App\Models\quantity_stock::where('trans_id',$invoice->trans_id)->get();
+
+                // $suppliers = App\Models\suppliers_collection::get();
 
                 $total_buy_price = 0;
                 $total_sell_price = 0;
 
-                foreach ($invoice_products as $innerKey => $invoice_product) {
+                foreach ($invoice->invoice_products as $innerKey => $invoice_product) {
                     $total_buy_price = $total_buy_price + $invoice_product->buy_price;
 
                     $total_sell_price = $total_sell_price + $invoice_product->sell_price;
                 }
 
-                $total_profit = $total_sell_price-$total_buy_price
+                $total_profit = $total_sell_price-$total_buy_price;
+
+                $total_quantity = 0;
+
+                foreach ($invoice->invoice_quantity as $quantitykey => $invoice_quantitie) {
+                    $total_quantity = $total_quantity + $invoice_quantitie->quantity;
+                }
 
 
             @endphp
@@ -63,7 +72,10 @@
                     {{ $total_profit }}
                 </td>
                 <td>
-                    <label data-trans_id="{{ $invoice->trans_id }}" id="indexInvoiceProductBtn" for="detailsDrawer" class="btn btn-xs btn-accent">{{ count($invoice_products) }}</label>
+                    <label data-trans_id="{{ $invoice->trans_id }}" id="indexInvoiceProductBtn" for="detailsDrawer" class="btn btn-xs btn-accent">{{ count($invoice->invoice_products) }}</label>
+                </td>
+                <td>
+                    {{ $total_quantity }}
                 </td>
                 <td>
                     <button id="invoiceEditBtn" class="btn btn-xs btn-circle btn-neutral invoice_edit_key_{{ $key+1 }}">

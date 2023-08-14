@@ -13,20 +13,17 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        @foreach ($products as $key=>$product)
+        @foreach ($stock_products as $key=>$stock_product)
         @php
-            $stock_products = App\Models\product_stock::where('product_code',$product->product_code)->get();
-            $stock_quantities = App\Models\quantity_stock::where('product_code',$product->product_code)->get();
-            $sizes = App\Models\size_collection::get();
             $total_buy_price = 0;
             $total_sell_price = 0;
-            foreach ($stock_products as $stockProductKey => $stock_product) {
-                $total_buy_price = $total_buy_price+$stock_product->buy_price;
-                $total_sell_price = $total_sell_price+$stock_product->sell_price;
+            foreach ($stock_product->stock_product_info as $stockProductKey => $inner_product_info) {
+                $total_buy_price = $total_buy_price+$inner_product_info->buy_price;
+                $total_sell_price = $total_sell_price+$inner_product_info->sell_price;
             }
             $total_quantity = 0;
-            foreach ($stock_quantities as $quantitikey => $stock_quantitie) {
-                $total_quantity = $total_quantity + $stock_quantitie->quantity;
+            foreach ($stock_product->stock_quantity_info as $quantitikey => $inner_quantity_info) {
+                $total_quantity = $total_quantity + $inner_quantity_info->quantity;
             }
             $total_profit = $total_sell_price - $total_buy_price;
         @endphp
@@ -35,25 +32,28 @@
                 <td>
                     <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
-                            <img src="{{ asset('storage/uploads/'.$product->product_img) }}" alt="Avatar Tailwind CSS Component" />
+                            <img src="{{ asset('storage/uploads/'.$stock_product->product_img) }}" alt="Avatar Tailwind CSS Component" />
                         </div>
                     </div>
                 </td>
                 <td>
-                    {{ $product->product_name }}
+                    {{ $stock_product->product_name }}
                 </td>
                 <td>
+                    {{-- 12 --}}
                     {{ $total_buy_price }} /-
                 </td>
                 <td>
+                    {{-- 12 --}}
                     {{ $total_sell_price }} /-
                 </td>
                 <td>
+                    {{-- 12 --}}
                     {{ $total_profit }} /-
                 </td>
                 <td>
                     <label
-                    data-product_code="{{ $product->product_code }}"
+                    data-product_code="{{ $stock_product->product_code }}"
                     id="productStockQuantityBtn"
                     for="detailsDrawer"
                     class="btn btn-xs btn-info normal-case">
