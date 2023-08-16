@@ -58,6 +58,7 @@
         $(document).on('select2:select','.selectProducts',function(){
             const selectedField = $(this).attr('class').split(' ')[1]
             const selectedKey = selectedField.split('_')[2]
+            console.log(selectedKey)
 
 
             const productCode = $(this).val()
@@ -207,18 +208,19 @@
             const productCode = $(this).data('product_code');
             const classList = $(this).attr('class').split(' ');
             const selectedKey = classList[3].split('_')[3]
+            console.log(selectedKey)
+            localStorage.setItem('addProductQuantityRow',selectedKey)
 
-
-
-            $.ajax({
-                url:'{{ route('index.setquantity.table') }}',
-                method:'POST',
-                data:{product_code:productCode},
-                success:function(res){
-                    $('#detailsDrawerContent').html(res)
-                    $('#hiddenKeyInput').val(selectedKey)
-                }
-            })
+            const lastSelected = localStorage.getItem('addProductQuantityRow')
+                $.ajax({
+                    url:'{{ route('index.setquantity.table') }}',
+                    method:'POST',
+                    data:{product_code:productCode},
+                    success:function(res){
+                        $('#detailsDrawerContent').html(res)
+                        $('#hiddenKeyInput').val(selectedKey)
+                    }
+                })
         })
 
 
@@ -254,35 +256,70 @@
 
         })
 
-        const stock_products = [1,2,3,4,5];
 
 
-        stock_products?.forEach((value,i) => {
-            $.ajax({
-                url:'{{ route('add.product.tr') }}',
-                method:'POST',
-                data:{key:i},
-                success:function(res){
-                    $('#addProductsTbody').append(res)
-                }
-            })
-        })
-
-
-
+        let stock_products = [0,1,2,3,4];
         $(document).on('click','#addRecord',function(){
+            $('#addProductsTbody').append(
+                `
+                    <tr>
+                        <th>
+                            ${stock_products.length+1}
+                        </th>
+                        <td>
+                            <select
+                            ${$('#supplierSelect').val() ? '' : 'disabled'}
+                            {{-- data-sell_price="{{ $product->sell_price  }}" --}}
+                            {{-- data-buy_price="{{  $product->buy_price  }}" --}}
+                            {{-- data-product_img="{{  $product->product_img  }}" --}}
+                            {{-- data-product_name="{{ $product->product_name }}" --}} class="selectProducts select_num_${stock_products.length+1}">
+                                <option></option>
+                                @php
+                                    $innerproducts = $products
+                                @endphp
+                                @foreach ($innerproducts as $innerKey=>$innerproduct)
+                                    <option class="{{ $innerproduct->product_code }}" value="{{ $innerproduct->product_code }}">{{ $innerproduct->product_name }}</option>
+                                @endforeach
+                                <input type="text" class="hidden hidden_pc_${stock_products.length+1}">
+                            </select>
+                        </td>
+                        <td>
+                            <i class="fa-solid fa-image text-gray-800 imgIco_${stock_products.length+1}"></i>
+                            <div class="avatar hidden product_img_${stock_products.length+1}">
+                                <div class="mask mask-squircle w-6 h-6">
+                                    <img src="#" alt="Avatar Tailwind CSS Component" />
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <input id="buy_price" disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs buy_price_${stock_products.length+1}">
+                        </td>
+                        <td>
+                            <input id="sell_price" disabled value="0" type="text" class="input input-bordered input-sm w-full max-w-xs sell_price_${stock_products.length+1}">
+                        </td>
+                        <th class="flex flex-col items-center">
+                            <span class="badge badge-neutral quantity_${stock_products.length+1}">0</span>
+                            <label
+                            {{-- data-product_name="{{ $ }}" --}}
+                            id="setQuantityBtn"
+                            for="detailsDrawer"
+                            class="btn btn-primary btn-disabled btn-xs d_q_btn_${stock_products.length+1}">details</label>
+                        </th>
+                        <th>
+                            <button id="resetBtn" class="btn btn-circle btn-accent btn-sm reset_${stock_products.length+1}">
+                                <i class="fa-solid fa-rotate-left "></i>
+                            </button>
+                        </th>
+                    </tr>
+                `
+            )
 
-
-            stock_products.push(1);
-
-            $.ajax({
-                url:'{{ route('add.product.tr') }}',
-                method:'POST',
-                data:{key:stock_products.length-1},
-                success:function(res){
-                    $('#addProductsTbody').append(res)
-                }
+            $('.selectProducts').select2({
+                placeholder:'Select Product',
+                allowClear:true,
             })
+
+            stock_products.push(stock_products.length);
         })
 
 
