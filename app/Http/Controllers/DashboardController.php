@@ -432,6 +432,15 @@ class DashboardController extends Controller
     }
 
 
+    public function indexAddProductTr(Request $request){
+        $key = $request->key;
+
+        $products = products_collection::all();
+
+        return view('sections.add_product_table_data',compact('key','products'));
+    }
+
+
 
 
 }

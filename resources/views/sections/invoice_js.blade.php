@@ -254,6 +254,37 @@
 
         })
 
+        const stock_products = [1,2,3,4,5];
+
+
+        stock_products?.forEach((value,i) => {
+            $.ajax({
+                url:'{{ route('add.product.tr') }}',
+                method:'POST',
+                data:{key:i},
+                success:function(res){
+                    $('#addProductsTbody').append(res)
+                }
+            })
+        })
+
+
+
+        $(document).on('click','#addRecord',function(){
+
+
+            stock_products.push(1);
+
+            $.ajax({
+                url:'{{ route('add.product.tr') }}',
+                method:'POST',
+                data:{key:stock_products.length-1},
+                success:function(res){
+                    $('#addProductsTbody').append(res)
+                }
+            })
+        })
+
 
         $(document).on('click','#stockInBtn',function(){
 

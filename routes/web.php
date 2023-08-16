@@ -79,3 +79,5 @@ Route::post('/stock-colection/delete-invoice-products',[DashboardController::cla
 Route::post('/stock-collection/invoice-product-edit',[DashboardController::class,'invoiceProductEdit'])->name('invoice.product.edit');
 
 Route::post('/stock-collection/invoice-product-quantity-edit',[DashboardController::class,'invoiceProductQuantityEdit'])->name('invoice.product.quantity.edit');
+
+Route::post('/stock-in/index-add-product-tr',[DashboardController::class,'indexAddProductTr'])->name('add.product.tr');
